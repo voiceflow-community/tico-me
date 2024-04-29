@@ -1,0 +1,33 @@
+{
+  "name": "tico-perso",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.3.0"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2",
+    "@remotion/install-whisper-cpp": "4.0.141",
+    "axios": "^1.6.8",
+    "child_process": "^1.0.2",
+    "dotenv": "^16.4.5",
+    "electron-store": "^8.2.0",
+    "form-data": "^4.0.0",
+    "node-record-lpcm16": "^1.0.1",
+    "node-wav": "^0.0.2",
+    "node-whisper": "^2024.2.15",
+    "nodejs-whisper": "^0.1.10",
+    "p-queue": "^8.0.1",
+    "smart-whisper": "^0.7.0",
+    "wav": "^1.0.2",
+    "whisper-node": "^1.1.1"
+  }
+}
