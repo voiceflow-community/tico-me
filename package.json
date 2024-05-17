@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.1.2",
-    "@remotion/install-whisper-cpp": "4.0.141",
+    "@remotion/install-whisper-cpp": "4.0.147",
     "axios": "^1.6.8",
     "child_process": "^1.0.2",
     "dotenv": "^16.4.5",
