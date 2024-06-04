@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, Menu, dialog } from 'electron'
+import { app, BrowserWindow, Tray, Menu } from 'electron'
 import record from 'node-record-lpcm16'
 import fs from 'fs'
 import path, { join } from 'path'
@@ -105,8 +105,6 @@ function startRecording() {
   }
   isRecording = true
 
-  //filePath = `/tmp/audio-${Date.now()}.wav`
-  //filePath = path.join(tmpdir(), `audio-${Date.now()}.wav`)
   filePath = path.join(tmpdir, `audio-${Date.now()}.wav`)
   file = fs.createWriteStream(filePath, { encoding: 'binary' })
 
