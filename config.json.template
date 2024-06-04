@@ -1,0 +1,8 @@
+{
+  "pauseTrigger": 2,
+  "whisperUrl": "your whipser endpoint",
+  "voiceflowApiKey": "your VF API key",
+  "voiceflowProjectId": "your project ID (only needed if kbJSON is set to false)",
+  "kbJSON": false,
+  "initialPrompt": "The following is a conversation recorded by Niko, which might includes Voiceflow related terms like Tico, voiceflow, voiceflow.com, voiceflow.studio, other voiceflow subdomains and URLs, steps, prompt, utterance, intent and API related terms. Here is a list of other possible words: Tico, Tico Me, kb, knowledge base, debug, combine blocks. Translate the conversation in English if needed."
+}

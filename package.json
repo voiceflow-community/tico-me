@@ -1,0 +1,28 @@
+{
+  "name": "tico-me",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.3.0"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2",
+    "axios": "^1.6.8",
+    "child_process": "^1.0.2",
+    "dotenv": "^16.4.5",
+    "electron-store": "^9.0.0",
+    "form-data": "^4.0.0",
+    "node-record-lpcm16": "^1.0.1",
+    "node-wav": "^0.0.2",
+    "p-queue": "^8.0.1",
+    "wav": "^1.0.2"
+  }
+}
