@@ -1,12 +1,13 @@
-import { app, BrowserWindow, Tray, Menu } from 'electron'
+import { app, BrowserWindow, Tray, Menu, dialog } from 'electron'
 import record from 'node-record-lpcm16'
 import fs from 'fs'
-import path from 'path'
+import path, { join } from 'path'
 import { fileURLToPath } from 'url'
 import axios from 'axios'
 import FormData from 'form-data'
 import ElectronStore from 'electron-store'
 import PQueue from 'p-queue'
+import { platform } from 'os'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -29,8 +30,43 @@ const voiceflowApiKey = config.voiceflowApiKey
 const voiceflowProjectId = config.voiceflowProjectId || null
 const initialPrompt = config.initialPrompt || ''
 const kbJSON = config.kbJSON || false
+let isApp = true
 
-function createAboutWindow() {
+const tmpdir = app.getPath('temp')
+
+if (process.defaultApp) {
+  console.log('Running via npm start')
+  isApp = false
+}
+
+function getSoxPath() {
+  let soxPath
+  switch (platform()) {
+    case 'darwin':
+      if (isApp) {
+        soxPath = path.join(process.resourcesPath, 'sox', 'mac')
+      } else {
+        soxPath = './resources/sox/mac'
+      }
+      break
+    case 'win32':
+      if (isApp) {
+        soxPath = path.join(process.resourcesPath, 'sox', 'win32')
+      } else {
+        soxPath = './resources/sox/win32'
+      }
+      break
+    /* case 'linux':
+        soxPath = path.join(process.resourcesPath, 'sox', 'linux')
+        break;
+      */
+    default:
+      throw new Error('Unsupported platform')
+  }
+  return soxPath + '/'
+}
+
+function createAboutWindow(show = false) {
   if (aboutWindow) {
     aboutWindow.show()
     return
@@ -38,17 +74,15 @@ function createAboutWindow() {
   aboutWindow = new BrowserWindow({
     width: 500,
     height: 200,
-    show: false,
+    titleBarStyle: 'hiddenInset',
+    closable: true,
+    minimizable: false,
+    maximizable: false,
+    fullscreenable: false,
+    show: show,
   })
 
   aboutWindow.loadFile('about.html')
-
-  aboutWindow.on('ready-to-show', () => {})
-
-  aboutWindow.on('close', (event) => {
-    event.preventDefault()
-    aboutWindow.hide()
-  })
 
   aboutWindow.on('closed', () => {
     aboutWindow = null
@@ -71,18 +105,23 @@ function startRecording() {
   }
   isRecording = true
 
-  filePath = `/tmp/audio-${Date.now()}.wav`
+  //filePath = `/tmp/audio-${Date.now()}.wav`
+  //filePath = path.join(tmpdir(), `audio-${Date.now()}.wav`)
+  filePath = path.join(tmpdir, `audio-${Date.now()}.wav`)
   file = fs.createWriteStream(filePath, { encoding: 'binary' })
 
   recorder = record.record({
     sampleRate: 16000,
     verbose: false,
     channels: 1,
-    recorder: 'rec', // 'sox',
+    recorder: 'rec', //'sox',
     endOnSilence: true,
     thresholdStart: 2.0,
     thresholdEnd: 1.8,
+    //execFile: 'rec',
     silence: pauseTrigger,
+    audioType: 'wav',
+    recorderPath: getSoxPath(),
   })
 
   console.log('Recording started')
@@ -256,13 +295,16 @@ function updateTrayMenu() {
     },
     {
       label: 'About',
-      click: createAboutWindow,
+      click: () => {
+        createAboutWindow(true)
+      },
     },
     {
       label: 'Quit',
       click: () => {
         app.isQuitting = true
         if (tray) tray.destroy()
+        if (aboutWindow) aboutWindow.close()
         app.quit()
       },
     },
@@ -274,6 +316,9 @@ function updateTrayMenu() {
 app
   .whenReady()
   .then(() => {
+    if (process.platform === 'darwin') {
+      app.dock.hide()
+    }
     createAboutWindow()
     createTray()
     aboutWindow.once('ready-to-show', () => {
@@ -290,6 +335,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin' || app.isQuitting) {
     app.quit()
   }
+})
+
+app.on('before-quit', () => {
+  app.isQuitting = true
 })
 
 app.on('quit', () => {
