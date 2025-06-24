@@ -55,3 +55,6 @@ Working version for Windows is 14.4.1. You can download the binaries or use choc
 You will have to edit the `package.json` file `build` to set the correct values.
 
 ```npm run build```
+
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=voiceflow-community_tico-me&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=voiceflow-community_tico-me)
